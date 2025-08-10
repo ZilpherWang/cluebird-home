@@ -3,43 +3,72 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
-import { getCategoryList } from '@/utils/api/category'
+import { getCategoryList, CategoryItem, RequestConfig } from '@/utils/api/request'
+
+interface ProcessedCategory {
+  id: number;
+  name: string;
+  path: string;
+  isActive: boolean;
+}
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [isDarkMode, setIsDarkMode] = useState(false)
-  const [categories, setCategories] = useState([])
+  const [categories, setCategories] = useState<ProcessedCategory[]>([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
 
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen)
 
   useEffect(() => {
     async function fetchCategories() {
       try {
-        const res = await getCategoryList()
-        if (res && res.data) {
-          const parsed = res.data.map((item: any) => ({
+        setLoading(true)
+        setError(null)
+        
+        const response = await getCategoryList({ 
+          status: 'active',
+          limit: 10 
+        })
+        
+        if (response.success && response.data) {
+          // 处理API返回的数据
+          const processed: ProcessedCategory[] = response.data.map((item: CategoryItem) => ({
             id: item.id,
             name: item.name,
             path: item.path || `/${item.code || item.name.toLowerCase()}`,
             isActive: item.isActive || false,
           }))
-          if (!parsed.some((item: any) => item.isActive) && parsed.length > 0) {
-            parsed[0].isActive = true
+          
+          // 如果没有活跃项目，将第一个设为活跃
+          if (!processed.some(item => item.isActive) && processed.length > 0) {
+            processed[0].isActive = true
           }
-          setCategories(parsed)
+          
+          setCategories(processed)
+        } else {
+          throw new Error(response.message || 'Failed to fetch categories')
         }
       } catch (err) {
         console.error('fetch category failed', err)
-        setCategories([
+        setError(err instanceof Error ? err.message : 'Unknown error')
+        
+        // 设置默认分类作为后备
+        const defaultCategories: ProcessedCategory[] = [
           { id: 1, name: 'LIVE', path: '/', isActive: true },
           { id: 2, name: 'All', path: '/all', isActive: false },
           { id: 3, name: 'New', path: '/new', isActive: false },
           { id: 4, name: 'Popular', path: '/popular', isActive: false },
           { id: 5, name: 'Trending', path: '/trending', isActive: false },
           { id: 6, name: 'Upcoming', path: '/upcoming', isActive: false },
-        ])
+        ]
+        setCategories(defaultCategories)
+      } finally {
+        setLoading(false)
       }
     }
+    
     fetchCategories()
   }, [])
 
@@ -48,7 +77,11 @@ export default function Header() {
       <div className="flex items-center gap-6 px-6 py-3">
         {/* Logo */}
         <svg className="h-8 cursor-pointer" width="168" height="38" viewBox="0 0 168 38" fill="none">
-          {/* SVG paths here */}
+          {/* SVG paths here - 你可以替换成实际的logo */}
+          <rect width="168" height="38" rx="4" fill="#3B82F6"/>
+          <text x="84" y="24" textAnchor="middle" fill="white" className="text-sm font-bold">
+            PredictMarket
+          </text>
         </svg>
 
         {/* Search */}
@@ -110,7 +143,7 @@ export default function Header() {
                 <div className="border-b p-2">
                   {['/elections', '/sports', '/rewards', '/learn'].map(path => (
                     <Link key={path} href={path} className="block px-4 py-2 text-sm text-gray-800 hover:bg-gray-100">
-                      {path.replace('/', '')}
+                      {path.replace('/', '').charAt(0).toUpperCase() + path.replace('/', '').slice(1)}
                     </Link>
                   ))}
                 </div>
@@ -141,14 +174,30 @@ export default function Header() {
         </div>
       </div>
 
+      {/* Category Navigation */}
       <div className="border-t px-6">
         <ul className="flex gap-6 overflow-x-auto h-10 items-center">
-          {categories.map(cat => (
+          {loading && (
+            <li className="text-gray-400">
+              <span>Loading categories...</span>
+            </li>
+          )}
+          
+          {error && !loading && (
+            <li className="text-red-500">
+              <span title={error}>Error loading categories</span>
+            </li>
+          )}
+          
+          {!loading && !error && categories.map(cat => (
             <li key={cat.id} className={cat.isActive ? 'text-red-500' : 'text-gray-600'}>
-              <Link href={cat.path}>{cat.name}</Link>
+              <Link href={cat.path} className="hover:text-red-500 transition-colors">
+                {cat.name}
+              </Link>
             </li>
           ))}
-          {categories.length === 0 && (
+          
+          {!loading && !error && categories.length === 0 && (
             <li className="text-red-500">
               <Link href="/">LIVE</Link>
             </li>

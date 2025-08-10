@@ -3,13 +3,6 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import classNames from 'classnames';
 
-const tabs = [
-  { label: 'New', name: 'new' },
-  { label: 'Ukraine', name: 'ukraine' },
-  { label: 'Oscars', name: 'oscars' },
-  { label: 'Trump Presidency', name: 'trump' },
-];
-
 const predictions = [
   {
     id: '1',
@@ -49,21 +42,6 @@ function PredictionTabs() {
 
   return (
     <div className="w-full px-8 py-4">
-      <div className="flex gap-4 mb-4">
-        {tabs.map((tab) => (
-          <button
-            key={tab.name}
-            className={classNames(
-              'px-4 py-2 rounded-md border text-sm font-medium',
-              activeTab === tab.name ? 'bg-blue-500 text-white' : 'bg-white border-gray-300 text-gray-700'
-            )}
-            onClick={() => setActiveTab(tab.name)}
-          >
-            {tab.label}
-          </button>
-        ))}
-      </div>
-
       {rows.map((row) => (
         <div className="flex gap-5 mb-5" key={row}>
           {getPredictionsForRow(row).map((prediction, index) => (

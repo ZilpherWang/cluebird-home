@@ -1,0 +1,421 @@
+/* public/tradingview-custom.css */
+
+/* Gate.io 风格的图表样式优化 */
+
+/* 主容器样式 */
+.tv-lightweight-charts {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+/* 价格轴样式 */
+.tv-lightweight-charts .pane {
+  background: linear-gradient(180deg, #fafbfc 0%, #ffffff 100%);
+}
+
+/* 深色主题 */
+[data-theme="dark"] .tv-lightweight-charts .pane {
+  background: linear-gradient(180deg, #1a1e2e 0%, #16202d 100%);
+}
+
+/* 网格线优化 */
+.tv-lightweight-charts .horizontal-grid-line,
+.tv-lightweight-charts .vertical-grid-line {
+  opacity: 0.1;
+}
+
+/* 蜡烛图优化 */
+.tv-lightweight-charts .candlestick-item {
+  transition: opacity 0.2s ease;
+}
+
+.tv-lightweight-charts .candlestick-item:hover {
+  opacity: 0.8;
+}
+
+/* 成交量柱状图 */
+.tv-lightweight-charts .volume-bar {
+  border-radius: 1px 1px 0 0;
+}
+
+/* 十字线样式 */
+.tv-lightweight-charts .crosshair-line {
+  stroke-dasharray: 3, 3;
+  stroke-width: 1;
+  opacity: 0.8;
+}
+
+/* 价格标签 */
+.tv-lightweight-charts .price-label {
+  background: rgba(46, 60, 85, 0.95);
+  border-radius: 4px;
+  padding: 4px 8px;
+  font-size: 12px;
+  font-weight: 500;
+  color: white;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* 时间轴标签 */
+.tv-lightweight-charts .time-label {
+  background: rgba(46, 60, 85, 0.95);
+  border-radius: 4px;
+  padding: 4px 8px;
+  font-size: 12px;
+  font-weight: 500;
+  color: white;
+}
+
+/* 图例样式 */
+.tv-lightweight-charts .legend {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  z-index: 10;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 6px;
+  padding: 8px 12px;
+  font-size: 12px;
+  line-height: 1.4;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(8px);
+}
+
+[data-theme="dark"] .tv-lightweight-charts .legend {
+  background: rgba(30, 34, 45, 0.95);
+  color: #d1d4dc;
+}
+
+/* 工具提示 */
+.tv-lightweight-charts .tooltip {
+  position: absolute;
+  z-index: 1000;
+  background: rgba(46, 60, 85, 0.95);
+  color: white;
+  border-radius: 6px;
+  padding: 8px 12px;
+  font-size: 12px;
+  line-height: 1.4;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+  backdrop-filter: blur(10px);
+  max-width: 200px;
+}
+
+.tv-lightweight-charts .tooltip::before {
+  content: '';
+  position: absolute;
+  bottom: -6px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 0;
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  border-top: 6px solid rgba(46, 60, 85, 0.95);
+}
+
+/* 预测市场特有样式 */
+.prediction-chart {
+  position: relative;
+}
+
+.prediction-chart::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, #3b82f6, #8b5cf6, #06b6d4);
+  z-index: 1;
+}
+
+/* 概率区间标记 */
+.probability-zone-high {
+  background: rgba(34, 197, 94, 0.1);
+  border: 1px solid rgba(34, 197, 94, 0.3);
+}
+
+.probability-zone-medium {
+  background: rgba(249, 115, 22, 0.1);
+  border: 1px solid rgba(249, 115, 22, 0.3);
+}
+
+.probability-zone-low {
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .tv-lightweight-charts .legend {
+    top: 8px;
+    left: 8px;
+    padding: 6px 10px;
+    font-size: 11px;
+  }
+  
+  .tv-lightweight-charts .tooltip {
+    font-size: 11px;
+    padding: 6px 10px;
+    max-width: 160px;
+  }
+}
+
+/* 动画效果 */
+@keyframes chartFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.tv-lightweight-charts {
+  animation: chartFadeIn 0.6s ease-out;
+}
+
+/* 加载状态样式 */
+.chart-loading {
+  position: relative;
+}
+
+.chart-loading::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 40px;
+  height: 40px;
+  border: 3px solid #f3f4f6;
+  border-top: 3px solid #3b82f6;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  z-index: 100;
+}
+
+@keyframes spin {
+  0% { transform: translate(-50%, -50%) rotate(0deg); }
+  100% { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+/* TradingView 工具栏自定义 */
+.tv-header {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+  border: none !important;
+}
+
+.tv-header .tv-button {
+  background: rgba(255, 255, 255, 0.1) !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  color: white !important;
+  transition: all 0.2s ease !important;
+}
+
+.tv-header .tv-button:hover {
+  background: rgba(255, 255, 255, 0.2) !important;
+  transform: translateY(-1px);
+}
+
+/* 时间周期按钮样式 */
+.tv-toolbar__button {
+  border-radius: 6px !important;
+  font-weight: 500 !important;
+  transition: all 0.2s ease !important;
+}
+
+.tv-toolbar__button--active {
+  background: linear-gradient(135deg, #3b82f6, #1d4ed8) !important;
+  color: white !important;
+  box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3) !important;
+}
+
+/* 价格刻度样式优化 */
+.tv-price-axis {
+  font-size: 11px !important;
+  font-weight: 500 !important;
+  color: #6b7280 !important;
+}
+
+[data-theme="dark"] .tv-price-axis {
+  color: #9ca3af !important;
+}
+
+/* 成交量面板优化 */
+.tv-volume-pane {
+  background: rgba(248, 250, 252, 0.5) !important;
+  border-top: 1px solid #e5e7eb !important;
+}
+
+[data-theme="dark"] .tv-volume-pane {
+  background: rgba(17, 24, 39, 0.5) !important;
+  border-top: 1px solid #374151 !important;
+}
+
+/* 移动平均线样式 */
+.tv-series-ma {
+  stroke-width: 2px !important;
+  opacity: 0.8 !important;
+}
+
+/* RSI 指标样式 */
+.tv-series-rsi {
+  stroke-width: 1.5px !important;
+}
+
+.tv-series-rsi-overbought {
+  stroke: #ef4444 !important;
+  stroke-dasharray: 2, 2 !important;
+}
+
+.tv-series-rsi-oversold {
+  stroke: #22c55e !important;
+  stroke-dasharray: 2, 2 !important;
+}
+
+/* MACD 指标样式 */
+.tv-series-macd-line {
+  stroke: #3b82f6 !important;
+  stroke-width: 1.5px !important;
+}
+
+.tv-series-macd-signal {
+  stroke: #f59e0b !important;
+  stroke-width: 1.5px !important;
+}
+
+.tv-series-macd-histogram-positive {
+  fill: rgba(34, 197, 94, 0.6) !important;
+}
+
+.tv-series-macd-histogram-negative {
+  fill: rgba(239, 68, 68, 0.6) !important;
+}
+
+/* 预测市场概率线 */
+.prediction-probability-line {
+  stroke: #8b5cf6 !important;
+  stroke-width: 3px !important;
+  stroke-dasharray: none !important;
+  filter: drop-shadow(0 2px 4px rgba(139, 92, 246, 0.3));
+}
+
+/* 关键概率水平线 */
+.probability-level-50 {
+  stroke: #6b7280 !important;
+  stroke-width: 1px !important;
+  stroke-dasharray: 5, 5 !important;
+  opacity: 0.7 !important;
+}
+
+.probability-level-25,
+.probability-level-75 {
+  stroke: #9ca3af !important;
+  stroke-width: 1px !important;
+  stroke-dasharray: 3, 3 !important;
+  opacity: 0.5 !important;
+}
+
+/* 预测事件标记 */
+.prediction-event-marker {
+  fill: #ef4444 !important;
+  stroke: white !important;
+  stroke-width: 2px !important;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+}
+
+.prediction-event-marker:hover {
+  transform: scale(1.2);
+  transition: transform 0.2s ease;
+}
+
+/* 流动性指示器 */
+.liquidity-indicator {
+  position: absolute;
+  bottom: 12px;
+  right: 12px;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 6px;
+  padding: 6px 10px;
+  font-size: 11px;
+  color: #6b7280;
+  backdrop-filter: blur(8px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+[data-theme="dark"] .liquidity-indicator {
+  background: rgba(30, 34, 45, 0.95);
+  color: #9ca3af;
+}
+
+.liquidity-high {
+  color: #22c55e !important;
+}
+
+.liquidity-medium {
+  color: #f59e0b !important;
+}
+
+.liquidity-low {
+  color: #ef4444 !important;
+}
+
+/* 自定义滚动条 */
+.tv-chart-container::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.tv-chart-container::-webkit-scrollbar-track {
+  background: #f1f5f9;
+  border-radius: 3px;
+}
+
+.tv-chart-container::-webkit-scrollbar-thumb {
+  background: linear-gradient(135deg, #cbd5e1, #94a3b8);
+  border-radius: 3px;
+}
+
+.tv-chart-container::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(135deg, #94a3b8, #64748b);
+}
+
+/* 深色主题滚动条 */
+[data-theme="dark"] .tv-chart-container::-webkit-scrollbar-track {
+  background: #1e293b;
+}
+
+[data-theme="dark"] .tv-chart-container::-webkit-scrollbar-thumb {
+  background: linear-gradient(135deg, #475569, #334155);
+}
+
+[data-theme="dark"] .tv-chart-container::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(135deg, #64748b, #475569);
+}
+
+/* 图表容器边框效果 */
+.trading-chart-container {
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 
+    0 1px 3px rgba(0, 0, 0, 0.1),
+    0 1px 2px rgba(0, 0, 0, 0.06);
+  transition: box-shadow 0.2s ease;
+}
+
+.trading-chart-container:hover {
+  box-shadow: 
+    0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+[data-theme="dark"] .trading-chart-container {
+  border-color: #374151;
+  background: #1f2937;
+}
